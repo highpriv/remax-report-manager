@@ -1,4 +1,4 @@
-import LoginView from "@/views/login";
+import LoginView from "../views/login";
 
 export default function Home() {
   return (

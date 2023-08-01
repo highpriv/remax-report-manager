@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { TextField } from "@/components/index";
+import { TextField } from "../../components/index";
 
 const LoginView: React.FC = () => {
   const router = useRouter();
