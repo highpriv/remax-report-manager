@@ -1,44 +1,65 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+// pages/index.tsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { apiUrl, currentDate } from '../../constants/Dashboard';
 
-const DashboardView: React.FC = () => {
-  const [currencyData, setCurrencyData] = useState(null);
+const CurrencyConverter: React.FC = () => {
+  const [currencyTypes, setFromCurrency] = useState<String[]>(['USD', 'EUR', 'TRY']);
+  const [currencyDatas, setCurrencyDatas] = useState<Object>({
+    USDTRY: 0,
+    EURTRY: 0,
+    EURUSD: 0,
+  });
+
+  const handleConvert = async () => {
+    try {
+      currencyTypes.forEach(async (currency) => {
+        const response = await axios.get(`${apiUrl}/latest/${currency}`);
+        const currencyData = response.data.conversion_rates;
+        
+        setCurrencyDatas((prev) => ({
+          ...prev,
+          [`${currency}TRY`]: currencyData.TRY,
+          [`${currency}EUR`]: currencyData.EUR,
+          [`${currency}USD`]: currencyData.USD,
+        }));
+
+      });
+    } catch (error) {
+      console.error('Error fetching exchange rates:', error);
+    }
+  };
 
   useEffect(() => {
-    const apiUrl = "https://www.tcmb.gov.tr/kurlar/today.xml";
-
-    const fetchCurrencyData = async () => {
-      try {
-        await axios
-          .get(apiUrl, {
-            headers: {
-              "Content-Type": "application/xml; charset=utf-8",
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-            setCurrencyData(response.data);
-          });
-      } catch (error) {
-        console.error("Error fetching currency data:", error);
-      }
-    };
-
-    fetchCurrencyData();
+    handleConvert();
   }, []);
 
   return (
     <div>
-      {currencyData ? (
-        <div>
-          <h2>Currency Rates</h2>
-          <pre>{JSON.stringify(currencyData, null, 2)}</pre>
-        </div>
-      ) : (
-        <p>Loading currency data...</p>
-      )}
+      <h1 className="text-2xl p-4 mb-4">BM Günlük Rapor</h1>
+
+      <span>{currentDate}</span>
+      
+      <h3>USD/TRY: {
+        
+        currencyDatas.USDTRY
+
+        }</h3>
+
+      <h3>EUR/TRY: {
+          
+          currencyDatas.EURTRY
+  
+          }</h3>
+
+      <h3>EUR/USD: {
+            
+            currencyDatas.EURUSD
+    
+            }</h3>
+
     </div>
   );
 };
 
-export default DashboardView;
+export default CurrencyConverter;
