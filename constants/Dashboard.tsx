@@ -1,11 +1,8 @@
-import {format} from 'date-fns';
+import { format } from "date-fns";
 
-const API_KEY = "54d7f2a3d8b30c7127eb144c";
-const apiUrl = `https://v6.exchangerate-api.com/v6/${API_KEY}`;
-const currentDate = format(new Date(), 'dd/MM/yyyy');
+const API_KEY_VAKIFBANK = process.env.NEXT_PUBLIC_VAKIFBANK_KEY;
+const API_KEY_TCMB = process.env.NEXT_PUBLIC_TCMB_KEY;
+const apiUrl = `https://apigw.vakifbank.com.tr:8443/getCurrencyRates`;
+const currentDate = format(new Date(), "dd/MM/yyyy");
 
-export {
-    apiUrl,
-    API_KEY,
-    currentDate
-}
+export { apiUrl, API_KEY, currentDate };
